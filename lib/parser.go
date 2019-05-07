@@ -5,20 +5,6 @@ import (
 	"strconv"
 )
 
-const (
-	NTSEXPR = iota
-	NTID
-	NTNUM
-	NTLITERAL
-)
-
-type Node struct {
-	nodeType int
-	sval     string
-	ival     float64
-	subs     []*Node
-}
-
 type Parser struct {
 	lexer *Lexer
 }

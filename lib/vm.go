@@ -61,39 +61,15 @@ func (self *VM) evalSExpr(node *Node) *Node {
 
 func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 	if functionName == "print" {
-		// todo support more args
-		if len(args) > 0 {
-			argOrg := args[0]
-			arg := self.evalNode(argOrg)
-			if arg.nodeType == NTNUM {
-				fmt.Printf("%f\n", arg.ival)
-			} else if arg.nodeType == NTLITERAL {
-				fmt.Printf("%s\n", arg.sval)
-			} else {
-				fmt.Println("print only can print number or literal")
-			}
-		} else {
-			fmt.Println("print requires at least 1 arg")
-		}
-		//fixme return a nil node instead
-		return &Node{nodeType: NTNUM, ival: 0}
+		return Buildins__print(self, args)
 	} else if functionName == "+" {
-		var sumNum float64 = 0
-		if len(args) > 0 {
-			for _, arg := range args {
-				node := self.evalNode(arg)
-				if node.nodeType == NTNUM {
-					sumNum += node.ival
-				} else {
-					fmt.Println("sum only support number")
-					break
-				}
-			}
-
-		} else {
-			fmt.Println("sum requires at least 1 arg")
-		}
-		return &Node{nodeType: NTNUM, ival: sumNum}
+		return Buildins__add(self, args)
+	} else if functionName == "-" {
+		return Buildins__sub(self, args)
+	} else if functionName == "*" {
+		return Buildins__mul(self, args)
+	} else if functionName == "/" {
+		return Buildins__div(self, args)
 	} else if functionName == "progn" {
 		//sequence execution
 		node := &Node{nodeType: NTNUM, ival: 0}
