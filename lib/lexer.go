@@ -114,6 +114,7 @@ func (self *Lexer) NextToken() {
 		} else {
 			self.getchar()
 		}
+		self.tokenType = TTLITERAL
 
 	} else if self.cc == 0 {
 		self.token = ""
