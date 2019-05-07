@@ -6,8 +6,14 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, gaialisp")
+	fmt.Println("gaialisp v0.0.1")
+	fmt.Println("developed by Nicolas Siu")
 	code := gaialisp.ReadFile("./test.lisp")
-	parser:=gaialisp.NewParser(code)
-	parser.Test()
+	parser := gaialisp.NewParser(code)
+	//parser.Test()
+	root := parser.Parse()
+
+	vm := gaialisp.NewVM(root)
+
+	vm.Eval()
 }
