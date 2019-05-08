@@ -6,12 +6,13 @@ import (
 
 type VM struct {
 	root *Node
+	globalScope *Closure
 }
 
 func NewVM(root *Node) *VM {
 	vm := &VM{}
 	vm.root = root
-
+	vm.globalScope = NewClosure()
 	return vm
 
 }
@@ -25,12 +26,13 @@ func (self *VM) evalNode(node *Node) *Node {
 	switch node.nodeType {
 	case NTSEXPR:
 		return self.evalSExpr(node)
-	case NTID:
-		panic("vm error: variable is not supported currently")
 	case NTNUM:
 		return node
 	case NTLITERAL:
 		return node
+	case NTID:
+		//fixme should get local var
+		return self.globalScope.GetVar(node.sval)
 	default:
 		panic(fmt.Sprintf("vm error: unknown nodeType %d", node.nodeType))
 	}
@@ -57,6 +59,15 @@ func (self *VM) evalSExpr(node *Node) *Node {
 
 		// eval first node #end
 	}
+}
+
+func (self *VM) DefVar(varName string, value *Node)*Node {
+	//fixme return nil node
+	ret:=&Node{nodeType: NTNUM, ival: 0}
+
+	self.globalScope.DefVar(varName, value)
+
+	return ret
 }
 
 func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
@@ -86,6 +97,19 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		}
 		return node
 
+	} else if functionName == "def" {
+		if len(args) == 2 {
+			//first arg is id
+			if args[0].nodeType == NTID {
+
+				value:=self.evalNode(args[1])
+				return self.DefVar(args[0].sval, value)
+			} else {
+				panic("define first arg should be an identifier")
+			}
+		} else {
+			panic("define syntax error: requires 2 args")
+		}
 	} else {
 		panic(fmt.Sprintf("unknown function name: %s", functionName))
 	}
