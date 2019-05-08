@@ -62,10 +62,20 @@ func (self *Lexer) getchar() {
 }
 
 func (self *Lexer) NextToken() {
-	for isSpace(self.cc) {
-		self.getchar()
-	}
+	for isSpace(self.cc) || self.cc == ';' {
+		if self.cc == ';' {
+			// comment
+			self.getchar()
+			for self.cc != '\r' && self.cc != '\n' {
+				self.getchar()
+			}
+		} else {
+			for isSpace(self.cc) {
+				self.getchar()
+			}
 
+		}
+	}
 	if self.cc == '(' {
 		self.token = "("
 		self.tokenType = TTLPAR

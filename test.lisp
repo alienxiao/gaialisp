@@ -6,4 +6,5 @@
 	(print (+ (* 3 3) (* 4 4)))
 	(print (- 10 6))
 	(print (/ 1 2)))
+; this is a comment
 
