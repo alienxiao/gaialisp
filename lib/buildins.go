@@ -2,6 +2,7 @@ package gaialisp
 
 import (
 	"fmt"
+	"math"
 )
 
 func Buildins__print(self *VM, args []*Node) *Node {
@@ -114,5 +115,24 @@ func Buildins__div(self *VM, args []*Node) *Node {
 		fmt.Println("div requires at least 2 args")
 	}
 	return &Node{nodeType: NTNUM, ival: sumNum}
+
+}
+
+
+
+func Buildins__sqrt(self *VM, args []*Node) *Node {
+	var result float64 = 0
+	if len(args) == 1 {
+			node := self.evalNode(args[0])
+			if node.nodeType == NTNUM {
+				result = math.Sqrt(node.ival)
+			} else {
+				fmt.Println("sqrt only support number")
+			}
+
+	} else {
+		fmt.Println("sqrt requires 1 arg")
+	}
+	return &Node{nodeType: NTNUM, ival: result}
 
 }

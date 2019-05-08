@@ -70,6 +70,8 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		return Buildins__mul(self, args)
 	} else if functionName == "/" {
 		return Buildins__div(self, args)
+	} else if functionName == "sqrt" {
+		return Buildins__sqrt(self, args)
 	} else if functionName == "progn" {
 		//sequence execution
 		node := &Node{nodeType: NTNUM, ival: 0}
