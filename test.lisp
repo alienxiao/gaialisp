@@ -1,4 +1,7 @@
 (progn
+	; define variable
+	(def chinese "你好")
+	(print chinese)
 	; print some string
   (print "hello")
   (print "world")
@@ -8,7 +11,9 @@
   (print (+ 10 20))
 	(print "sqrt(3*3 + 4*4) = ")
 	; test multiply and plus
-	(print (sqrt (+ (* 3 3) (* 4 4))))
+	(def q3 (* 3 3))
+	(def q4 (* 4 4))
+	(print (sqrt (+ q3 q4)))
 	; test minus and division
 	(print (- 10 6))
 	(print (/ 1 2)))

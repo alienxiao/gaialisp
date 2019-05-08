@@ -31,7 +31,7 @@ func (self *Closure) GetVar(varName string) *Node {
 		panic(fmt.Sprintf("variable [%s] not defined", varName))
 	}
 	// fixme if scope[varName] is nil?
-	return self.scope[varName]
+	return val
 }
 
 
