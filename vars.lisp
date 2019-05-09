@@ -1,2 +1,2 @@
 (progn
-	(def chinese "中文来自vars.lisp"))
+	(defvar chinese "中文来自vars.lisp"))

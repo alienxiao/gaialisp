@@ -97,7 +97,7 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		}
 		return node
 
-	} else if functionName == "def" {
+	} else if functionName == "defvar" {
 		if len(args) == 2 {
 			//first arg is id
 			if args[0].nodeType == NTID {
@@ -110,7 +110,7 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		} else {
 			panic("define syntax error: requires 2 args")
 		}
-	} else if functionName == "require" {
+	} else if functionName == "import" {
 		if len(args) == 1 && args[0].nodeType == NTLITERAL {
 			return Require(self, args[0].sval)
 		} else {
