@@ -1,6 +1,6 @@
 (progn
-	; define variable
-	(def chinese "你好")
+	; define variable in other file
+	(require "vars.lisp")
 	(print chinese)
 	; print some string
   (print "hello")

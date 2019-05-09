@@ -110,6 +110,12 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		} else {
 			panic("define syntax error: requires 2 args")
 		}
+	} else if functionName == "require" {
+		if len(args) == 1 && args[0].nodeType == NTLITERAL {
+			return Require(self, args[0].sval)
+		} else {
+			panic("require syntax error: requires 1 string arg")
+		}
 	} else {
 		panic(fmt.Sprintf("unknown function name: %s", functionName))
 	}
