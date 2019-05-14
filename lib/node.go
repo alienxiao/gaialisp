@@ -5,6 +5,7 @@ const (
 	NTID
 	NTNUM
 	NTLITERAL
+	NTLAMBDA
 )
 
 type Node struct {

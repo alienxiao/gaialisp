@@ -30,6 +30,8 @@ func (self *VM) evalNode(node *Node) *Node {
 		return node
 	case NTLITERAL:
 		return node
+	case NTLAMBDA:
+		return node
 	case NTID:
 		//fixme should get local var
 		return self.globalScope.GetVar(node.sval)
@@ -116,6 +118,8 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 		} else {
 			panic("require syntax error: requires 1 string arg")
 		}
+	} else if functionName == "lambda" {
+		return DefLambda(self, args)		
 	} else {
 		panic(fmt.Sprintf("unknown function name: %s", functionName))
 	}

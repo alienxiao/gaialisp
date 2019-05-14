@@ -16,6 +16,12 @@
 	(print (sqrt (+ q3 q4)))
 	; test minus and division
 	(print (- 10 6))
-	(print (/ 1 2)))
+	(print (/ 1 2))
+	; test lambda
+	(defvar say-hello 
+		(lambda () 
+			(print "hello from lambda")))
+	; call lambda
+	(say-hello))
 ; this is a comment
 
