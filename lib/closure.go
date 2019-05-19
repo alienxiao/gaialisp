@@ -6,10 +6,11 @@ import (
 
 type Closure struct {
 	scope map[string]*Node
+	upper *Closure
 }
 
 func NewClosure()*Closure {
-	closure:=&Closure{scope: make(map[string]*Node)}
+	closure:=&Closure{scope: make(map[string]*Node), upper: nil}
 	return closure
 }
 
@@ -28,11 +29,23 @@ func (self *Closure) GetVar(varName string) *Node {
 	val, exist:=self.scope[varName]
 
 	if !exist {
-		panic(fmt.Sprintf("variable [%s] not defined", varName))
+		// find in upper closure
+		if self.upper != nil {
+			val = self.upper.GetVar(varName)
+			if val == nil {
+				exist = false
+			}
+		}
 	}
+	
+	if !exist {
+		panic(fmt.Sprintf("variable [%s] not defined", varName))
+	
+	}
+
 	// fixme if scope[varName] is nil?
+	if val == nil {
+		panic(fmt.Sprintf("variable [%s] is nil<internal error>", varName))
+	}
 	return val
 }
-
-
-

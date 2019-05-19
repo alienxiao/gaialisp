@@ -13,4 +13,5 @@ type Node struct {
 	sval     string
 	ival     float64
 	subs     []*Node
+	upper *Closure //for lambda node
 }

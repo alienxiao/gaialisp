@@ -5,16 +5,35 @@ import (
 )
 
 type VM struct {
-	root *Node
-	globalScope *Closure
+	root   *Node
+	frames []*Closure
 }
 
 func NewVM(root *Node) *VM {
 	vm := &VM{}
 	vm.root = root
-	vm.globalScope = NewClosure()
+	vm.frames = make([]*Closure, 0)
+	globalScope := NewClosure()
+	vm.pushFrame(globalScope)
 	return vm
 
+}
+
+func (self *VM) pushFrame(c *Closure) {
+	self.frames = append(self.frames, c)
+}
+func (self *VM) popFrame() {
+	if len(self.frames) <= 1 {
+		panic("popframe error")
+	}
+	self.frames = self.frames[0 : len(self.frames)-1]
+}
+func (self *VM) currentFrame() *Closure {
+	if len(self.frames) <= 0 {
+		panic("frame is empty")
+	}
+
+	return self.frames[len(self.frames)-1]
 }
 
 func (self *VM) Eval() {
@@ -34,7 +53,7 @@ func (self *VM) evalNode(node *Node) *Node {
 		return node
 	case NTID:
 		//fixme should get local var
-		return self.globalScope.GetVar(node.sval)
+		return self.GetVar(node.sval)
 	default:
 		panic(fmt.Sprintf("vm error: unknown nodeType %d", node.nodeType))
 	}
@@ -63,13 +82,43 @@ func (self *VM) evalSExpr(node *Node) *Node {
 	}
 }
 
-func (self *VM) DefVar(varName string, value *Node)*Node {
-	//fixme return nil node
-	ret:=&Node{nodeType: NTNUM, ival: 0}
+func (self *VM) GetVar(varName string) *Node {
+	currentFrame := self.currentFrame()
+	return currentFrame.GetVar(varName)
+}
 
-	self.globalScope.DefVar(varName, value)
+func (self *VM) DefVar(varName string, value *Node) *Node {
+	//fixme return nil node
+	ret := &Node{nodeType: NTNUM, ival: 0}
+
+	currentFrame := self.currentFrame()
+	currentFrame.DefVar(varName, value)
 
 	return ret
+}
+
+func (self *VM) CallLambda(lambda *Node, args []*Node) *Node {
+	argNames := GetLambdaArgs(lambda)
+	body:=GetLambdaBody(lambda)
+	//number of args must be same
+	if len(argNames) == len(args) {
+		//bind args
+		frame := NewClosure()
+		frame.upper = lambda.upper
+		self.pushFrame(frame)
+
+		for x, argName := range argNames {
+			frame.DefVar(argName, self.evalNode(args[x]))
+		}
+
+		ret:= self.evalNode(body)
+		self.popFrame()
+		return ret
+
+	} else {
+		panic("number of args must be same")
+	}
+
 }
 
 func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
@@ -104,7 +153,7 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 			//first arg is id
 			if args[0].nodeType == NTID {
 
-				value:=self.evalNode(args[1])
+				value := self.evalNode(args[1])
 				return self.DefVar(args[0].sval, value)
 			} else {
 				panic("define first arg should be an identifier")
@@ -119,9 +168,21 @@ func (self *VM) callInternalFunction(functionName string, args []*Node) *Node {
 			panic("require syntax error: requires 1 string arg")
 		}
 	} else if functionName == "lambda" {
-		return DefLambda(self, args)		
+		return DefLambda(self, args)
 	} else {
-		panic(fmt.Sprintf("unknown function name: %s", functionName))
+		// find node by identifier
+
+		firstNode := self.GetVar(functionName)
+
+		// only if firstNode is lambda can be called
+		// todo this logic should be outside
+
+		if firstNode.nodeType == NTLAMBDA {
+			return self.CallLambda(firstNode, args)
+		} else {
+			panic(fmt.Sprintf("unknown function name: %s", functionName))
+		}
+		
 	}
 
 }

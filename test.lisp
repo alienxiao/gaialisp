@@ -18,10 +18,12 @@
 	(print (- 10 6))
 	(print (/ 1 2))
 	; test lambda
-	(defvar say-hello 
-		(lambda () 
-			(print "hello from lambda")))
+	(defvar say-hello
+		(lambda (name) 
+      (progn 
+        (print "hello from lambda")
+        (print name))))
 	; call lambda
-	(say-hello))
+	(say-hello "nicolas"))
 ; this is a comment
 
