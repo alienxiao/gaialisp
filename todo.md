@@ -1,15 +1,14 @@
 1. type
-2. lambda
-3. define struct
-4. apply
-5. quote
-6. defun
-7. local vars
-8. if
-9. while
-10. file api
-11. string api
-12. compare
-13. boolean
-14. char
+2. define struct
+3. apply
+4. quote
+5. defun
+6. local vars
+7. if
+8. while
+9. file api
+10. string api
+11. compare
+12. boolean
+13. char
 

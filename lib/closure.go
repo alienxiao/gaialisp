@@ -26,15 +26,16 @@ func (self* Closure) DefVar(varName string, value* Node) {
 }
 
 func (self *Closure) GetVar(varName string) *Node {
+	// fmt.Printf(">>>>get var [%s]\n", varName)
 	val, exist:=self.scope[varName]
 
 	if !exist {
+		// fmt.Printf(">>>>var not exist in current [%s]\n", varName)
 		// find in upper closure
 		if self.upper != nil {
+			// fmt.Printf(">>>>find var in upper [%s]\n", varName)
 			val = self.upper.GetVar(varName)
-			if val == nil {
-				exist = false
-			}
+			exist = val != nil
 		}
 	}
 	

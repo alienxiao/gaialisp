@@ -22,7 +22,8 @@
 		(lambda (name) 
       (progn 
         (print "hello from lambda")
-        (print name))))
+        (print name)
+        (print var-from-global))))
 	; call lambda
 	(say-hello "nicolas"))
 ; this is a comment
